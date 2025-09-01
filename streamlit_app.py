@@ -121,7 +121,7 @@ with st.sidebar:
   srh_encoder = np.zeros(4, dtype=np.int32).reshape(1,-1)
   if srh > 1:
     srh_encoder[srh-2] = 1
-    
+  st.write(srh_encoder)
   adlab_c = st.selectbox(
     '''How many of the following daily living activities do you have difficulty with?
   (Note: Daily living activities include: using the toilet, feeding yourself,
