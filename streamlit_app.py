@@ -7,5 +7,5 @@ st.title('Prediction of Cardiovascular Disease in Middle-Aged and Elderly Patien
 
 st.info('This app is based on machine learning model')
 df = pd.read_csv("X_test.csv")
-model = joblib.load('XGB.pk1')
+model = joblib.load('XGB.pkl')
 df
