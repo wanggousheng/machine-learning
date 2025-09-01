@@ -136,8 +136,8 @@ with st.sidebar:
     adlab_c_encoder[adlab_c-1] = 1
 values = [hibpe, lunge, dyslipe, kidneye, digeste,
 asthmae, memrye, mdact_c, hospital, retire, wrist_pain,chest_pain ]
-input_values1 = np.array([values])
-input_values2 = np.concatenate([input_values1,srh_encoder], axis=1)
-input_values = np.concatenate([input_values2,adlab_c_encoder], axis=1)
+# input_values1 = np.array([values])
+# input_values2 = np.concatenate([input_values1,srh_encoder], axis=1)
+# input_values = np.concatenate([input_values2,adlab_c_encoder], axis=1)
 np.shape(srh_encoder)
 
