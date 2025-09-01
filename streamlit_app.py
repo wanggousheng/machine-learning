@@ -78,7 +78,7 @@ with st.sidebar:
   '''Have you been diagnosed with Asthma by a doctor?''',
     (0, 1),
     index=None,
-    placeholder=''No = 0,Yes = 1',
+    placeholder='No = 0,Yes = 1',
   )
   
 
