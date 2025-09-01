@@ -118,7 +118,7 @@ with st.sidebar:
     index=None,
     placeholder="Select you score.",
   )
-  srh_encoder = np.zeros(4, dtype=np.int32)
+  srh_encoder = np.zeros(4, dtype=np.int32).reshape(-1,1)
   if srh > 1:
     srh_encoder[srh-2] = 1
     
@@ -131,7 +131,7 @@ with st.sidebar:
     placeholder='''Options: 0 item (no difficulty) / 1 item 
     / 2 items / 3 items / 4 items / 5 items / 6 items.''',
   )
-  adlab_c_encoder = np.zeros(6, dtype=np.int32)
+  adlab_c_encoder = np.zeros(6, dtype=np.int32).reshape(-1,1)
   if adlab_c > 0 :
     adlab_c_encoder[adlab_c-1] = 1
 values = [hibpe, lunge, dyslipe, kidneye, digeste,
