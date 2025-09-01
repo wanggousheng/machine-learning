@@ -16,23 +16,7 @@ model = joblib.load('XGB.pkl')
 ##       'chest_pain' 
 with st.sidebar:
   st.header("patient-related information")
-  srh = st.selectbox(
-    "Your Self-Reported Health Status Score(1–5 correspond to Very Good, Good, Fair, Poor, and Very Poor (in order).)",
-    (1, 2, 3, 4 ,5),
-    index=None,
-    placeholder="Select you score.",
-  )
-  
-  adlab_c = st.selectbox(
-    '''How many of the following daily living activities do you have difficulty with?
-  (Note: Daily living activities include: using the toilet, feeding yourself,
-   dressing yourself, controlling bowel and bladder movements, getting in and out of bed, bathing yourself)''',
-    (0, 1, 2 , 3 , 4 , 5 ,6),
-    index=None,
-    placeholder='''Options: 0 item (no difficulty) / 1 item 
-    / 2 items / 3 items / 4 items / 5 items / 6 items.''',
-  )
-  
+
   
   hibpe = st.selectbox(
     "Has any doctor ever told you that you have hypertension?",
@@ -127,9 +111,33 @@ with st.sidebar:
   index=None,
   placeholder='No = 0,Yes = 1',
   )
-
-values = [srh, adlab_c, hibpe, lunge, dyslipe, kidneye, digeste,
+  
+  srh = st.selectbox(
+    "Your Self-Reported Health Status Score(1–5 correspond to Very Good, Good, Fair, Poor, and Very Poor (in order).)",
+    (1, 2, 3, 4 ,5),
+    index=None,
+    placeholder="Select you score.",
+  )
+  srh_encoder = np.zeros(4, dtype=np.int32)
+  if srh > 1:
+    srh_encoder[srh-2] = 1
+    
+  adlab_c = st.selectbox(
+    '''How many of the following daily living activities do you have difficulty with?
+  (Note: Daily living activities include: using the toilet, feeding yourself,
+   dressing yourself, controlling bowel and bladder movements, getting in and out of bed, bathing yourself)''',
+    (0, 1, 2 , 3 , 4 , 5 ,6),
+    index=None,
+    placeholder='''Options: 0 item (no difficulty) / 1 item 
+    / 2 items / 3 items / 4 items / 5 items / 6 items.''',
+  )
+  adlab_c_encoder = np.zeros(6, dtype=np.int32)
+  if adlab_c > 0 :
+    adlab_c_encoder[adlab_c-1] = 1
+values = [hibpe, lunge, dyslipe, kidneye, digeste,
 asthmae, memrye, mdact_c, hospital, retire, wrist_pain,chest_pain ]
-input_values = np.array([values])
+input_values1 = np.array([values])
+input_values2 = np.append(input_values1, srh_encoder, axis=1)
+input_values = np.append(input_values2, adlab_c_encoder, axis=1)
 input_values
 
