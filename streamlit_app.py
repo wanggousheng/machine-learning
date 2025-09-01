@@ -127,7 +127,7 @@ with st.sidebar:
   (Note: Daily living activities include: using the toilet, feeding yourself,
    dressing yourself, controlling bowel and bladder movements, getting in and out of bed, bathing yourself)''',
     (0, 1, 2 , 3 , 4 , 5 ,6),
-    index=None,
+    index=0,
     placeholder='''Options: 0 item (no difficulty) / 1 item 
     / 2 items / 3 items / 4 items / 5 items / 6 items.''',
   )
