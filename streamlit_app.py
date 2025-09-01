@@ -32,7 +32,7 @@ with st.sidebar:
     placeholder='''Options: 0 item (no difficulty) / 1 item 
     / 2 items / 3 items / 4 items / 5 items / 6 items.''',
   )
-  st.write(type(adlab_c))
+  
   
   hibpe = st.selectbox(
     "Has any doctor ever told you that you have hypertension?",
@@ -127,3 +127,6 @@ with st.sidebar:
   index=None,
   placeholder='Options: No or Yes',
   )
+
+
+st.write(type(adlab_c))
