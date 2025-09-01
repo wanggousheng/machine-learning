@@ -128,5 +128,8 @@ with st.sidebar:
   placeholder='No = 0,Yes = 1',
   )
 
+values = [srh, adlab_c, hibpe, lunge, dyslipe, kidneye, digeste,
+asthmae, memrye, mdact_c, hospital, retire, wrist_pain,chest_pain ]
+input_values = np.array([values])
+input_values
 
-st.write(type(adlab_c))
