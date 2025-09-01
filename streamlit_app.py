@@ -13,7 +13,7 @@ model = joblib.load('XGB.pkl')
 
 ## 'srh', 'adlab_c', 'hibpe', 'lunge', 'dyslipe', 'kidneye', 'digeste',
 ##       'asthmae', 'memrye', 'mdact_c', 'hospital', 'retire', 'wrist_pain',
-##       'chest_pain'
+##       'chest_pain' 
 with st.sidebar:
   st.header("patient-related information")
   srh = st.selectbox(
