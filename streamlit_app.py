@@ -2,7 +2,7 @@ import numpy as np
 import streamlit as st
 import pandas as pd
 import joblib 
-import shap
+import shap 
 import matplotlib.pyplot as plt
 st.title('Prediction of Cardiovascular Disease in Middle-Aged and Elderly Patients with Diabetes Mellitus')
 
