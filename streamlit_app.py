@@ -139,5 +139,5 @@ asthmae, memrye, mdact_c, hospital, retire, wrist_pain,chest_pain ]
 input_values1 = np.array([values])
 input_values2 = np.concatenate([input_values1,srh_encoder], axis=1)
 input_values = np.concatenate([input_values2,adlab_c_encoder], axis=1)
-input_values
+np.shape(srh_encoder)
 
