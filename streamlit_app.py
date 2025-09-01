@@ -120,7 +120,7 @@ with st.sidebar:
   )
   srh_encoder = np.zeros(4, dtype=np.int32).reshape(1,-1)
   if srh > 1:
-    srh_encoder[srh-2] = 1
+    srh_encoder[0,srh-2] = 1
   st.write(srh_encoder)
   adlab_c = st.selectbox(
     '''How many of the following daily living activities do you have difficulty with?
@@ -133,7 +133,7 @@ with st.sidebar:
   )
   adlab_c_encoder = np.zeros(6, dtype=np.int32).reshape(1,-1)
   if adlab_c > 0 :
-    adlab_c_encoder[adlab_c-1] = 1
+    adlab_c_encoder[0,adlab_c-1] = 1
 values = [hibpe, lunge, dyslipe, kidneye, digeste,
 asthmae, memrye, mdact_c, hospital, retire, wrist_pain,chest_pain ]
 input_values1 = np.array([values])
