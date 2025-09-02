@@ -145,6 +145,7 @@ if st.button("Predict",width="stretch"):
   predicted_proba = model.predict_proba(input_values)[0]
 
 
-  st.info(f"**Predicted Classs**:  {predicted_class}   (1:Disease,0:No Disease)")
-  st.info(f"**Prediction Probabilities**:   {predicted_proba}")
+  st.info(f'''**Predicted Classs**:  {predicted_class}   (1:Disease,0:No Disease)\n
+  **Prediction Probabilities**:   {predicted_proba}''')
+
 
