@@ -148,7 +148,7 @@ if st.button("Predict",width="stretch"):
   df_proba.columns =['Disease','No Disease']
   df_proba.rename(columns={0:'Disease',
                           1:'No Disease'})
-  
+  print(df_proba)
 st.subheader('Predicted Species')
 st.dataframe(df_proba,
             column_config={
