@@ -165,11 +165,11 @@ if st.button("Predict",width="stretch"):
             })
   if predicted_class == 0:
     st.write(f'''Based on the model assessment, you have a high risk of developing cardiovascular disease, 
-    with a predicted probability of {100 * predicted_proba[0]:.1f}%%.To better protect your health,
+    with a predicted probability of {100 * predicted_proba[0]:.1f}%.To better protect your health,
     it is recommended that you consult a doctor in the cardiology or endocrinology department 
     as soon as possible for further professional examinations and interventions.''' )
   if predicted_class == 1:
     st.write(f'''Based on the model assessment, you have a low risk of developing cardiovascular disease, 
-    with a predicted probability of {100* predicted_proba[0]:.1f}.%%''' )
+    with a predicted probability of {100* predicted_proba[0]:.1f}.%''' )
     
 
