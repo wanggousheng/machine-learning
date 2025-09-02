@@ -126,7 +126,8 @@ with st.sidebar:
   srh_encoder = np.zeros(4, dtype=np.int32).reshape(1,-1)
   if srh > 1:
     srh_encoder[0,srh-2] = 1
-  st.write(srh_encoder)
+
+  
   adlab_c = st.selectbox(
     '''How many of the following daily living activities do you have difficulty with?
   (Note: Daily living activities include: using the toilet, feeding yourself,
@@ -177,11 +178,10 @@ if st.button("Predict",width="stretch"):
   
   explainer_shap = shap.TreeExplainer(model)
   shap_values =explainer_shap.shap_values(pd.DataFrame(input_values,columns = feature_names))
-  st.write(shap_values)
-  st.write(explainer_shap.expected_value)
+
   shap.force_plot(explainer_shap.expected_value,shap_values,pd.DataFrame(input_values,columns=feature_names),matplotlib=True)
 
   plt.savefig('shap_force_plot.png', bbox_inches='tight',dpi =1200)
-  
+  st.image('shap_force_plot.png',caption = 'SHAP Force Plot Explanation')
     
 
