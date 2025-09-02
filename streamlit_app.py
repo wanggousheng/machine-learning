@@ -8,12 +8,10 @@ import matplotlib.pyplot as plt
 st.title('Prediction of Cardiovascular Disease in Middle-Aged and Elderly Patients with Diabetes Mellitus')
 
 # introduce the app and the method to use it
-st.info('''This application is built based on data from the China Health and Retirement Longitudinal Study (CHARLS)
-and incorporates an XGBoost prediction model. It is designed to assess the risk probability of middle-aged and elderly
-diabetic patients developing cardiovascular diseases.\n
-To use the application, users can enter relevant clinical and health-related information via the input panel on the left. 
-After clicking the "Predict" button, they will receive personalized results, including the predicted probability of developing
-the disease and corresponding visualization outcomes.''')
+st.info('''This app, built on CHARLS data with an integrated XGBoost prediction model, assesses the 
+cardiovascular disease risk probability of middle-aged and elderly diabetic patients.
+To use it, users enter relevant clinical/health info via the left input panel; 
+clicking "Predict" provides personalized results, including disease risk probability and related visualizations.''')
 
 # get the column name for input data
 df = pd.read_csv("X_test.csv")
