@@ -6,7 +6,12 @@ import shap
 import matplotlib.pyplot as plt
 st.title('Prediction of Cardiovascular Disease in Middle-Aged and Elderly Patients with Diabetes Mellitus')
 
-st.info('This app is based on machine learning model')
+st.info('''This application is built based on data from the China Health and Retirement Longitudinal Study (CHARLS)
+and incorporates an XGBoost prediction model. It is designed to assess the risk probability of middle-aged and elderly
+diabetic patients developing cardiovascular diseases.\n
+To use the application, users can enter relevant clinical and health-related information via the input panel on the left. 
+After clicking the "Predict" button, they will receive personalized results, including the predicted probability of developing
+the disease and corresponding visualization outcomes.''')
 df = pd.read_csv("X_test.csv")
 model = joblib.load('XGB.pkl')
 
