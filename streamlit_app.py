@@ -156,6 +156,12 @@ st.dataframe(df_proba,
               'Disease',
               format='%f',
               width = 'medium',
-              min_value =1)
+              min_value =0,
+              max_value =1),
+              # "No Disease":st.column_config.ProgressColumn(
+              # 'No Disease',
+              # format='%f',
+              # width = 'medium',
+              # min_value =1),
             })
 
