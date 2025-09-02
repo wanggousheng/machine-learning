@@ -14,7 +14,7 @@ After clicking the "Predict" button, they will receive personalized results, inc
 the disease and corresponding visualization outcomes.''')
 df = pd.read_csv("X_test.csv")
 model = joblib.load('XGB.pkl')
-feature_names = df.columns
+feature_names = df.columns.tolist()
 st.write(feature_names)
 ## 'srh', 'adlab_c', 'hibpe', 'lunge', 'dyslipe', 'kidneye', 'digeste',
 ##       'asthmae', 'memrye', 'mdact_c', 'hospital', 'retire', 'wrist_pain',
