@@ -156,6 +156,6 @@ st.dataframe(df_proba,
               'Disease',
               format='%f',
               width = 'medium',
-              min_value =1
+              min_value =1)
             })
 
