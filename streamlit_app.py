@@ -14,7 +14,7 @@ After clicking the "Predict" button, they will receive personalized results, inc
 the disease and corresponding visualization outcomes.''')
 df = pd.read_csv("X_test.csv")
 model = joblib.load('XGB.pkl')
-
+feature_names = model.columns
 
 ## 'srh', 'adlab_c', 'hibpe', 'lunge', 'dyslipe', 'kidneye', 'digeste',
 ##       'asthmae', 'memrye', 'mdact_c', 'hospital', 'retire', 'wrist_pain',
@@ -171,5 +171,19 @@ if st.button("Predict",width="stretch"):
   if predicted_class == 1:
     st.write(f'''Based on the model assessment, you have a low risk of developing cardiovascular disease, 
     with a predicted probability of {100* predicted_proba[0]:.1f}.%''' )
+
+  st.subheader("SHAP Force Plot Explanation")
+
+  
+  explainer_shap = shap.TreeExplainer(model)
+  shap_values =explainer_shap.shap_values(pd.DataFrame([input_values],columns = feature_names))
+
+  if predicted_class == 1:
+    shap.force_plot(explainer_shap.expected_value[1],shap_values[:,:,1],pd.DataFrame([input_values],columns=feature_name),matplotlib=True)
+  else:
+    shap.force_plot(explainer_shap.expected_value[0],shap_values[:,:,0],pd.DataFrame([input_values],columns=feature_name),matplotlib=True)
+
+  plt.savefig(shap_force_plot.png, bbox_inches=light,dpi =1200)
+  
     
 
