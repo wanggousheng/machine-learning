@@ -144,7 +144,7 @@ asthmae, memrye, mdact_c, hospital, retire, wrist_pain,chest_pain ]
 input_values1 = np.array([values])
 input_values2 = np.concatenate([input_values1,srh_encoder], axis=1)
 input_values = np.concatenate([input_values2,adlab_c_encoder], axis=1)
-
+feature = list(input_values)
 if st.button("Predict",width="stretch"):
   predicted_class = model.predict(input_values)[0]
   predicted_proba = model.predict_proba(input_values)[0]
@@ -176,13 +176,13 @@ if st.button("Predict",width="stretch"):
 
   
   explainer_shap = shap.TreeExplainer(model)
-  shap_values =explainer_shap.shap_values(pd.DataFrame(input_values,columns = feature_names))
+  shap_values =explainer_shap.shap_values(pd.DataFrame([feature],columns = feature_names))
   st.write(shap_values)
   st.write(explainer_shap.expected_value)
   if predicted_class == 1:
-    shap.force_plot(explainer_shap.expected_value[1],shap_values[:,:,1],pd.DataFrame(input_values,columns=feature_name),matplotlib=True)
+    shap.force_plot(explainer_shap.expected_value[1],shap_values[:,:,1],pd.DataFrame([feature],columns=feature_name),matplotlib=True)
   else:
-    shap.force_plot(explainer_shap.expected_value[0],shap_values[:,:,0],pd.DataFrame(input_values,columns=feature_name),matplotlib=True)
+    shap.force_plot(explainer_shap.expected_value[0],shap_values[:,:,0],pd.DataFrame([feature],columns=feature_name),matplotlib=True)
 
   plt.savefig(shap_force_plot.png, bbox_inches=light,dpi =1200)
   
