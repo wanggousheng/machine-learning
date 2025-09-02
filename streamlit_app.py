@@ -144,8 +144,18 @@ if st.button("Predict",width="stretch"):
   predicted_class = model.predict(input_values)[0]
   predicted_proba = model.predict_proba(input_values)[0]
 
-
-  st.info(f'''**Predicted Classs**:  {predicted_class}   (1:Disease,0:No Disease)\n
-  **Prediction Probabilities**:   {predicted_proba}''')
-
+  df_proba = pd.DataFrame(predicted_proba)
+  df_proba.columns =['Disease','No Disease']
+  df_proba.rename(columns={0:'Disease',
+                          1:'No Disease'})
+  
+st.subheader('Predicted Species')
+st.dataframe(df_proba,
+            column_config={
+            'Disease':st.column_config.ProgressColumn(
+              'Disease',
+              format='%f',
+              width = 'medium',
+              min_value =1
+            })
 
