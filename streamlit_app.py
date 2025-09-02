@@ -15,7 +15,7 @@ the disease and corresponding visualization outcomes.''')
 df = pd.read_csv("X_test.csv")
 model = joblib.load('XGB.pkl')
 feature_names = df.columns
-
+st.write(features_names)
 ## 'srh', 'adlab_c', 'hibpe', 'lunge', 'dyslipe', 'kidneye', 'digeste',
 ##       'asthmae', 'memrye', 'mdact_c', 'hospital', 'retire', 'wrist_pain',
 ##       'chest_pain' 
