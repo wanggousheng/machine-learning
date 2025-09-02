@@ -150,8 +150,8 @@ if st.button("Predict",width="stretch"):
   df_proba.rename(columns={0:'Disease',
                           1:'No Disease'})
   st.write(df_proba)
-st.subheader('Predicted Species')
-st.dataframe(df_proba,
+  st.subheader('Predicted Result')
+  st.dataframe(df_proba['Disease'],
             column_config={
             'Disease':st.column_config.ProgressColumn(
               'Disease',
@@ -159,10 +159,5 @@ st.dataframe(df_proba,
               width = 'medium',
               min_value =0,
               max_value =1),
-              # "No Disease":st.column_config.ProgressColumn(
-              # 'No Disease',
-              # format='%f',
-              # width = 'medium',
-              # min_value =1),
             })
 
