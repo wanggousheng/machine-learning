@@ -145,15 +145,15 @@ if st.button("Predict",width="stretch"):
   predicted_proba = model.predict_proba(input_values)[0]
 
   df_proba = pd.DataFrame(predicted_proba).T
-  df_proba.columns =['Disease','No Disease']
+  df_proba.columns =['Disease probability','No Disease probability']
   df_proba.rename(columns={0:'Disease',
                           1:'No Disease'})
   st.subheader('Predicted Result')
-  st.dataframe(df_proba['Disease'],
+  st.dataframe(df_proba['probability'],
             column_config={
             'Disease':st.column_config.ProgressColumn(
               'Disease',
-              format='%f',
+              format='%.3f',
               width = 'medium',
               min_value =0,
               max_value =1),
