@@ -181,7 +181,7 @@ if st.button("Predict",width="stretch"):
   st.write(explainer_shap.expected_value)
   shap.force_plot(explainer_shap.expected_value,shap_values,pd.DataFrame(input_values,columns=feature_names),matplotlib=True)
 
-  plt.savefig(shap_force_plot.png, bbox_inches=light,dpi =1200)
+  plt.savefig('shap_force_plot.png', bbox_inches=light,dpi =1200)
   
     
 
