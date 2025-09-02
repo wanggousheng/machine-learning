@@ -142,4 +142,4 @@ input_values = np.concatenate([input_values2,adlab_c_encoder], axis=1)
 st.write(np.shape(srh_encoder))
 st.write(np.shape(adlab_c_encoder))
 
-st.write(np.shape(input_values1))
+st.write(input_values)
