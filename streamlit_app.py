@@ -15,7 +15,6 @@ the disease and corresponding visualization outcomes.''')
 df = pd.read_csv("X_test.csv")
 model = joblib.load('XGB.pkl')
 feature_names = df.columns.tolist()
-st.write(feature_names)
 ## 'srh', 'adlab_c', 'hibpe', 'lunge', 'dyslipe', 'kidneye', 'digeste',
 ##       'asthmae', 'memrye', 'mdact_c', 'hospital', 'retire', 'wrist_pain',
 ##       'chest_pain' 
@@ -181,7 +180,7 @@ if st.button("Predict",width="stretch"):
 
   shap.force_plot(explainer_shap.expected_value,shap_values,pd.DataFrame(input_values,columns=feature_names),matplotlib=True)
 
-  plt.savefig('shap_force_plot.png', bbox_inches='tight',dpi =1200)
+  plt.savefig('shap_force_plot.png', bbox_inches='tight',dpi =1600)
   st.image('shap_force_plot.png',caption = 'SHAP Force Plot Explanation')
     
 
