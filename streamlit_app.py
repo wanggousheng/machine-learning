@@ -149,7 +149,7 @@ if st.button("Predict",width="stretch"):
   df_proba.rename(columns={0:'Disease',
                           1:'No Disease'})
   st.subheader('Predicted Result')
-  st.dataframe(df_proba['probability'],
+  st.dataframe(df_proba['Disease probability'],
             column_config={
             'Disease':st.column_config.ProgressColumn(
               'Disease',
