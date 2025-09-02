@@ -179,7 +179,7 @@ if st.button("Predict",width="stretch"):
   shap_values =explainer_shap.shap_values(pd.DataFrame(input_values,columns = feature_names))
   st.write(shap_values)
   st.write(explainer_shap.expected_value)
-  shap.force_plot(explainer_shap.expected_value,shap_values,pd.DataFrame(input_values,columns=feature_namess),matplotlib=True)
+  shap.force_plot(explainer_shap.expected_value,shap_values,pd.DataFrame(input_values,columns=feature_names),matplotlib=True)
 
   plt.savefig(shap_force_plot.png, bbox_inches=light,dpi =1200)
   
