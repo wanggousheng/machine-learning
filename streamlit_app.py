@@ -153,7 +153,7 @@ if st.button("Predict",width="stretch"):
             column_config={
             'Disease probability':st.column_config.ProgressColumn(
               'Disease probability',
-              format='%.1f%%',
+              format='%f%%',
               width = 'medium',
               min_value =0,
               max_value =1),
