@@ -144,7 +144,7 @@ if st.button("Predict",width="stretch"):
   predicted_class = model.predict(input_values)[0]
   predicted_proba = model.predict_proba(input_values)[0]
 
-  df_proba = pd.DataFrame(predicted_proba)
+  df_proba = pd.DataFrame(predicted_proba).T
   st.write(df_proba)
   df_proba.columns =['Disease','No Disease']
   df_proba.rename(columns={0:'Disease',
