@@ -151,8 +151,8 @@ if st.button("Predict",width="stretch"):
   st.subheader('Predicted Result')
   st.dataframe(df_proba['Disease probability'],
             column_config={
-            'Disease':st.column_config.ProgressColumn(
-              'Disease',
+            'Disease probability':st.column_config.ProgressColumn(
+              'Disease probability',
               format='%.3f',
               width = 'medium',
               min_value =0,
