@@ -139,7 +139,12 @@ asthmae, memrye, mdact_c, hospital, retire, wrist_pain,chest_pain ]
 input_values1 = np.array([values])
 input_values2 = np.concatenate([input_values1,srh_encoder], axis=1)
 input_values = np.concatenate([input_values2,adlab_c_encoder], axis=1)
-st.write(np.shape(srh_encoder))
-st.write(np.shape(adlab_c_encoder))
 
-st.write(input_values)
+if st.botton("Predict"):
+  predicted_class = model.predict(input_values)[0]
+  predicted_proba = model.predict_proba(input_values)[0]
+
+
+  st.write(f"**Predicted Classs**{predicted_class}(1:Disease,0:No Disease)")
+  st.write(f"**Prediction Probabilities**{predicted_proba}")
+
