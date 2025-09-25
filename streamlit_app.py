@@ -16,7 +16,7 @@ clicking "Predict" provides personalized results, including disease risk probabi
 
 # get the column name for input data
 X_train = pd.read_csv("X_train.csv")
-feature_names = df.columns.tolist()
+feature_names = X_train.columns.tolist()
 stand_scaler = StandardScaler()
 X_train['Age'] = stand_scaler.fit_transform(X_train['Age'].to_frame())
 max_scaler = MinMaxScaler()
