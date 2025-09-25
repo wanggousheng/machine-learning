@@ -17,7 +17,6 @@ clicking "Predict" provides personalized results, including disease risk probabi
 # get the column name for input data
 X_train = pd.read_csv("X_train.csv")
 feature_names = X_train.columns.tolist()
-feature_names
 stand_scaler = StandardScaler()
 X_train['Age'] = stand_scaler.fit_transform(X_train['Age'].to_frame())
 max_scaler = MinMaxScaler()
@@ -109,49 +108,49 @@ input_values = pd.DataFrame(input_values_raw,columns = feature_names)
 input_values['Age'] = stand_scaler.transform(input_values['Age'].to_frame())
 input_values[columns_to_normalize] = max_scaler.transform(input_values[columns_to_normalize])
 
-# # set button for predict
-# if st.button("Predict",width="stretch"):
-#   predicted_class = model.predict(input_values)[0]   #get class
-#   predicted_proba = model.predict_proba(input_values)[0] #get probability
+# set button for predict
+if st.button("Predict",width="stretch"):
+  predicted_class = model.predict(input_values)[0]   #get class
+  predicted_proba = model.predict_proba(input_values)[0] #get probability
 
-#   df_proba = pd.DataFrame(predicted_proba).T   #transpose
+  df_proba = pd.DataFrame(predicted_proba).T   #transpose
 
-#   # turn the ndarray to dataframe
-#   df_proba.columns =['Disease probability','No Disease probability']
-#   df_proba.rename(columns={0:'Disease',
-#                           1:'No Disease'})
+  # turn the ndarray to dataframe
+  df_proba.columns =['Disease probability','No Disease probability']
+  df_proba.rename(columns={0:'Disease',
+                          1:'No Disease'})
 
-#   # visualize the probability
-#   st.subheader('Predicted Result')
-#   st.DataFrame(df_proba['Disease probability'],
-#             column_config={
-#             'Disease probability':st.column_config.ProgressColumn(
-#               'Disease probability',
-#               format='%f',
-#               width = 'medium',
-#               min_value =0,
-#               max_value =1),
-#             })
+  # visualize the probability
+  st.subheader('Predicted Result')
+  st.DataFrame(df_proba['Disease probability'],
+            column_config={
+            'Disease probability':st.column_config.ProgressColumn(
+              'Disease probability',
+              format='%f',
+              width = 'medium',
+              min_value =0,
+              max_value =1),
+            })
 
-#   # give some advice for user
-#   if predicted_class == 0:
-#     st.write(f'''Based on the model assessment, you have a high risk of developing cardiovascular disease, 
-#     with a predicted probability of {100 * predicted_proba[0]:.1f}%.To better protect your health,
-#     it is recommended that you consult a doctor in the cardiology or endocrinology department 
-#     as soon as possible for further professional examinations and interventions.''' )
-#   if predicted_class == 1:
-#     st.write(f'''Based on the model assessment, you have a low risk of developing cardiovascular disease, 
-#     with a predicted probability of {100* predicted_proba[0]:.1f}.%''' )
+  # give some advice for user
+  if predicted_class == 0:
+    st.write(f'''Based on the model assessment, you have a high risk of developing cardiovascular disease, 
+    with a predicted probability of {100 * predicted_proba[0]:.1f}%.To better protect your health,
+    it is recommended that you consult a doctor in the cardiology or endocrinology department 
+    as soon as possible for further professional examinations and interventions.''' )
+  if predicted_class == 1:
+    st.write(f'''Based on the model assessment, you have a low risk of developing cardiovascular disease, 
+    with a predicted probability of {100* predicted_proba[0]:.1f}.%''' )
 
 
-#   # SHAP explain
-#   st.subheader("SHAP Force Plot Explanation")
-#   explainer_shap = shap.TreeExplainer(model)
-#   shap_values =explainer_shap.shap_values(pd.DataFrame(input_values,columns = feature_names))
+  # SHAP explain
+  st.subheader("SHAP Force Plot Explanation")
+  explainer_shap = shap.TreeExplainer(model)
+  shap_values =explainer_shap.shap_values(pd.DataFrame(input_values,columns = feature_names))
 
-#   shap.force_plot(explainer_shap.expected_value,shap_values,pd.DataFrame(input_values,columns=feature_names),matplotlib=True)
+  shap.force_plot(explainer_shap.expected_value,shap_values,pd.DataFrame(input_values,columns=feature_names),matplotlib=True)
 
-  # plt.savefig('shap_force_plot.png', bbox_inches='tight',dpi =1600)
-  # st.image('shap_force_plot.png',caption = 'SHAP Force Plot Explanation')
+  plt.savefig('shap_force_plot.png', bbox_inches='tight',dpi =1600)
+  st.image('shap_force_plot.png',caption = 'SHAP Force Plot Explanation')
     
 
