@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler,MinMaxScaler
 # Main title for the app
 st.title('Prediction of Cardiovascular Disease in Middle-Aged and Elderly Patients with Diabetes Mellitus')
-pip install --upgrade pip
+
 # introduce the app and the method to use it
 st.info('''This app, built on CHARLS data with an integrated XGBoost prediction model, assesses the 
 cardiovascular disease risk probability of middle-aged and elderly diabetic patients.
