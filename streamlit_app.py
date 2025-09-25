@@ -37,7 +37,7 @@ with st.sidebar:
 
   
   #select box
-  age = st.slider("How old are you?", 0, 100, 1)
+  age = st.slider("How old are you?", 45, 100, 1)
 
   ##Self-Reported Health Status Score
   srh = st.selectbox(
@@ -122,7 +122,7 @@ if st.button("Predict",width="stretch"):
 
   # visualize the probability
   st.subheader('Predicted Result')
-  st.DataFrame(df_proba['Disease probability'],
+  st.dataframe(df_proba['Disease probability'],
             column_config={
             'Disease probability':st.column_config.ProgressColumn(
               'Disease probability',
