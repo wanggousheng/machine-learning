@@ -15,7 +15,7 @@ To use it, users enter relevant clinical/health info via the left input panel;
 clicking "Predict" provides personalized results, including disease risk probability and related visualizations.''')
 
 # get the column name for input data
-df = pd.read_csv("X_train.csv")
+X_train = pd.read_csv("X_train.csv")
 feature_names = df.columns.tolist()
 stand_scaler = StandardScaler()
 X_train['Age'] = stand_scaler.fit_transform(X_train['Age'].to_frame())
