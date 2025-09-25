@@ -4,3 +4,4 @@ shap
 matplotlib
 xgboost
 sklearn
+pip>=25.2
