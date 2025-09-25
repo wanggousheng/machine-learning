@@ -151,7 +151,7 @@ input_values[columns_to_normalize] = max_scaler.transform(input_values[columns_t
 
 #   shap.force_plot(explainer_shap.expected_value,shap_values,pd.DataFrame(input_values,columns=feature_names),matplotlib=True)
 
-  plt.savefig('shap_force_plot.png', bbox_inches='tight',dpi =1600)
-  st.image('shap_force_plot.png',caption = 'SHAP Force Plot Explanation')
+  # plt.savefig('shap_force_plot.png', bbox_inches='tight',dpi =1600)
+  # st.image('shap_force_plot.png',caption = 'SHAP Force Plot Explanation')
     
 
