@@ -3,5 +3,4 @@ joblib
 shap
 matplotlib
 xgboost
-sklearn
-pip>=25.2
+scikit-learn
