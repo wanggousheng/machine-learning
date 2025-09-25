@@ -151,7 +151,7 @@ if st.button("Predict",width="stretch"):
   explainer_shap = shap.TreeExplainer(model)
   shap_values =explainer_shap.shap_values(input_values)
   shap_values
-  # shap.force_plot(base_value=explainer_shap.expected_value,shap_values=shap_values,features=input_values,matplotlib=True)
+  # shap.force_plot(base_value=shap_values[0],shap_values=shap_values,features=input_values,matplotlib=True)
 
   plt.savefig('shap_force_plot.png', bbox_inches='tight',dpi =1600)
   st.image('shap_force_plot.png',caption = 'SHAP Force Plot Explanation')
