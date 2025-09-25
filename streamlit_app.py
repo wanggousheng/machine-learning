@@ -14,7 +14,7 @@ cardiovascular disease risk probability of middle-aged and elderly diabetic pati
 To use it, users enter relevant clinical/health info via the left input panel; 
 clicking "Predict" provides personalized results, including disease risk probability and related visualizations.''')
 
-# get the column name for input data
+# get the column name for input data 
 X_train = pd.read_csv("X_train.csv")
 feature_names = X_train.columns.tolist()
 stand_scaler = StandardScaler()
