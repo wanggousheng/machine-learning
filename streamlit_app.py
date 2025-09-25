@@ -4,6 +4,7 @@ import pandas as pd
 import joblib 
 import shap 
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler,MinMaxScaler
 # Main title for the app
 st.title('Prediction of Cardiovascular Disease in Middle-Aged and Elderly Patients with Diabetes Mellitus')
 
@@ -16,7 +17,14 @@ clicking "Predict" provides personalized results, including disease risk probabi
 # get the column name for input data
 df = pd.read_csv("X_train.csv")
 feature_names = df.columns.tolist()
+stand_scaler = StandardScaler()
+X_train['Age'] = stand_scaler.fit_transform(X_train['Age'].to_frame())
+max_scaler = MinMaxScaler()
+columns_to_normalize = ['Self Reported Health Status','ADL Score']
+X_train[columns_to_normalize] = max_scaler.fit_transform(X_train[columns_to_normalize])
+
 # Age 	Self Reported Health Status 	ADL Score 	Hypertension 	Dyslipidemia 	Kidney disease 	Hospital 	Chest pain
+
 
 #load trained model
 model = joblib.load('rf.pkl')
@@ -93,16 +101,12 @@ with st.sidebar:
   placeholder='No = 0,Yes = 1',
   )
 
-    
-
-
-
-
-
 # merge all the input data
 values = [age,srh,adlab_c,hibpe,dyslipe, kidneye, hospital,chest_pain ]
-input_values1 = np.array([values])
-
+input_values_raw = np.array([values])
+input_values = pd.dataframe(input_values_raw,columns = feature_names)
+input_values['Age'] = stand_scaler.transform(input_values['Age'].to_frame())
+input_values[columns_to_normalize] = max_scaler.transform(input_values[columns_to_normalize])
 
 # set button for predict
 if st.button("Predict",width="stretch"):
