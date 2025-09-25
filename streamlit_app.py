@@ -122,7 +122,7 @@ if st.button("Predict",width="stretch"):
 
   # visualize the probability
   st.subheader('Predicted Result')
-  st.dataframe(df_proba['Disease probability'],
+  st.DataFrame(df_proba['Disease probability'],
             column_config={
             'Disease probability':st.column_config.ProgressColumn(
               'Disease probability',
