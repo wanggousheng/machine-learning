@@ -14,11 +14,9 @@ To use it, users enter relevant clinical/health info via the left input panel;
 clicking "Predict" provides personalized results, including disease risk probability and related visualizations.''')
 
 # get the column name for input data
-df = pd.read_csv("X_test.csv")
+df = pd.read_csv("X_train.csv")
 feature_names = df.columns.tolist()
-## 'srh', 'adlab_c', 'hibpe', 'lunge', 'dyslipe', 'kidneye', 'digeste',
-##       'asthmae', 'memrye', 'mdact_c', 'hospital', 'retire', 'wrist_pain',
-##       'chest_pain' 
+# Age 	Self Reported Health Status 	ADL Score 	Hypertension 	Dyslipidemia 	Kidney disease 	Hospital 	Chest pain
 
 #load trained model
 model = joblib.load('XGB.pkl')
