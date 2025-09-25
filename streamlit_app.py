@@ -104,7 +104,7 @@ with st.sidebar:
 # merge all the input data
 values = [age,srh,adlab_c,hibpe,dyslipe, kidneye, hospital,chest_pain ]
 input_values_raw = np.array([values])
-input_values = pd.DataFrame(input_values_raw,columns = feature_names,index = Flase)
+input_values = pd.DataFrame(input_values_raw,columns = feature_names)
 input_values['Age'] = stand_scaler.transform(input_values['Age'].to_frame())
 input_values[columns_to_normalize] = max_scaler.transform(input_values[columns_to_normalize])
 input_values
