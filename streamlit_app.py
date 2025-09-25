@@ -19,11 +19,9 @@ feature_names = df.columns.tolist()
 # Age 	Self Reported Health Status 	ADL Score 	Hypertension 	Dyslipidemia 	Kidney disease 	Hospital 	Chest pain
 
 #load trained model
-model = joblib.load('XGB.pkl')
+model = joblib.load('rf.pkl')
 
-## 'srh', 'adlab_c', 'hibpe', 'lunge', 'dyslipe', 'kidneye', 'digeste',
-##       'asthmae', 'memrye', 'mdact_c', 'hospital', 'retire', 'wrist_pain',
-##       'chest_pain' 
+# Age 	Self Reported Health Status 	ADL Score 	Hypertension 	Dyslipidemia 	Kidney disease 	Hospital 	Chest pain
 
 # set siderbar and select box
 with st.sidebar:
@@ -31,6 +29,10 @@ with st.sidebar:
 
   
   #select box
+  age = st.slider("How old are you?", 0, 100, 1)
+
+
+  
   # hypertension
   hibpe = st.selectbox(
     "Has any doctor ever told you that you have hypertension?",
