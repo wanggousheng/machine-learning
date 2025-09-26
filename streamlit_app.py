@@ -106,6 +106,7 @@ with st.sidebar:
 values = [age,srh,adlab_c,hibpe,dyslipe, kidneye, hospital,chest_pain ]
 columns = ['Age','Self Reported Health Status','ADL Score','Hypertension','Dyslipidemia','Kidney disease','Hospital','Chest pain']
 input_values_raw = np.array([values])
+no.shape(input_values_raw)
 input_values = pd.DataFrame(input_values_raw,columns = feature_names)
 input_values['Age'] = stand_scaler.transform(input_values['Age'].to_frame())
 input_values[columns_to_normalize] = max_scaler.transform(input_values[columns_to_normalize])
