@@ -122,7 +122,7 @@ if st.button("Predict",width="stretch"):
   df_proba.columns =['Disease probability','No Disease probability']
   df_proba.rename(columns={0:'No Disease',
                           1:'Disease'})
-
+  df_proba
   # visualize the probability
   st.subheader('Predicted Result')
   st.dataframe(df_proba['Disease probability'],
