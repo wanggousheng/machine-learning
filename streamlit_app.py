@@ -120,8 +120,8 @@ if st.button("Predict",width="stretch"):
 
   # turn the ndarray to dataframe
   df_proba.columns =['Disease probability','No Disease probability']
-  df_proba.rename(columns={0:'Disease',
-                          1:'No Disease'})
+  df_proba.rename(columns={0:'No Disease',
+                          1:'Disease'})
 
   # visualize the probability
   st.subheader('Predicted Result')
