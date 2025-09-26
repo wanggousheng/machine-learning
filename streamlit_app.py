@@ -110,8 +110,9 @@ st.write(np.shape(input_values_raw))
 input_values = pd.DataFrame(input_values_raw,columns = feature_names)
 input_values['Age'] = stand_scaler.transform(input_values['Age'].to_frame())
 input_values[columns_to_normalize] = max_scaler.transform(input_values[columns_to_normalize])
+
 # input_values = input_values[columns]
-np.shape(input_values)
+st.write(np.shape(input_values))
 # set button for predict
 if st.button("Predict",width="stretch"):
   predicted_class = model.predict(input_values)[0]   #get class
