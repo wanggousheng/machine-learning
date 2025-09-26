@@ -117,7 +117,7 @@ if st.button("Predict",width="stretch"):
   predicted_proba = model.predict_proba(input_values)[0] #get probability
 
   df_proba = pd.DataFrame(predicted_proba).T   #transpose
-
+  df_proba
   # turn the ndarray to dataframe
   df_proba.columns =['Disease probability','No Disease probability']
   df_proba.rename(columns={0:'No Disease',
@@ -146,14 +146,14 @@ if st.button("Predict",width="stretch"):
     with a predicted probability of {100* predicted_proba[0]:.1f}.%''' )
 
 
-  # SHAP explain
-  st.subheader("SHAP Force Plot Explanation")
-  explainer_shap = shap.TreeExplainer(model)
-  shap_values =explainer_shap.shap_values(input_values)
-  shap_values
-  # shap.force_plot(base_value=shap_values[0],shap_values=shap_values,features=input_values,matplotlib=True)
+  # # SHAP explain
+  # st.subheader("SHAP Force Plot Explanation")
+  # explainer_shap = shap.TreeExplainer(model)
+  # shap_values =explainer_shap.shap_values(input_values)
+  # shap_values
+  # # shap.force_plot(base_value=shap_values[0],shap_values=shap_values,features=input_values,matplotlib=True)
 
-  plt.savefig('shap_force_plot.png', bbox_inches='tight',dpi =1600)
-  st.image('shap_force_plot.png',caption = 'SHAP Force Plot Explanation')
+  # plt.savefig('shap_force_plot.png', bbox_inches='tight',dpi =1600)
+  # st.image('shap_force_plot.png',caption = 'SHAP Force Plot Explanation')
     
 
