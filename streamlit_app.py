@@ -150,7 +150,7 @@ if st.button("Predict",width="stretch"):
 
   # SHAP explain
   st.subheader("SHAP Force Plot Explanation")
-  
+  st.write(np.shape(input_values))
   explainer_shap = shap.TreeExplainer(model)
   shap_values =explainer_shap.shap_values(input_values)
   shap_values
