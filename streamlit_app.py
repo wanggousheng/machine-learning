@@ -106,6 +106,7 @@ with st.sidebar:
 values = [age,srh,adlab_c,hibpe,dyslipe, kidneye, hospital,chest_pain ]
 columns = ['Age','Self Reported Health Status','ADL Score','Hypertension','Dyslipidemia','Kidney disease','Hospital','Chest pain']
 input_values_raw = np.array([values])
+input_values_raw = input_values_raw.reshape(8, 2)
 input_values = pd.DataFrame(input_values_raw,columns = feature_names)
 input_values['Age'] = stand_scaler.transform(input_values['Age'].to_frame())
 input_values[columns_to_normalize] = max_scaler.transform(input_values[columns_to_normalize])
@@ -150,7 +151,6 @@ if st.button("Predict",width="stretch"):
   st.subheader("SHAP Force Plot Explanation")
   
   explainer_shap = shap.TreeExplainer(model)
-  input_values = input_values.reshape(8, 2) 
   shap_values =explainer_shap.shap_values(input_values)
   shap_values
   # shap.force_plot(base_value=shap_values[0],shap_values=shap_values,features=input_values,matplotlib=True)
