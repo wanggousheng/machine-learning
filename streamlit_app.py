@@ -37,7 +37,7 @@ with st.sidebar:
 
   
   #select box
-  age = st.slider("How old are you?", 45, 100, 1)
+  age = st.slider("How old are you?", max_value = 85 ,min_value = 45,value=60)
 
   ##Self-Reported Health Status Score
   srh = st.selectbox(
