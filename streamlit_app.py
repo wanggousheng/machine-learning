@@ -115,14 +115,14 @@ np.shape(input_values)
 if st.button("Predict",width="stretch"):
   predicted_class = model.predict(input_values)[0]   #get class
   predicted_proba = model.predict_proba(input_values)[0] #get probability
-
+  predicted_class
   df_proba = pd.DataFrame(predicted_proba).T   #transpose
-  df_proba
+ 
   # turn the ndarray to dataframe
   df_proba.columns =['No Disease probability','Disease probability']
   df_proba.rename(columns={0:'No Disease',
                           1:'Disease'})
-  df_proba
+  
   # visualize the probability
   st.subheader('Predicted Result')
   st.dataframe(df_proba['Disease probability'],
