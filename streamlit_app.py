@@ -119,7 +119,7 @@ if st.button("Predict",width="stretch"):
   df_proba = pd.DataFrame(predicted_proba).T   #transpose
   df_proba
   # turn the ndarray to dataframe
-  df_proba.columns =['Disease probability','No Disease probability']
+  df_proba.columns =['No Disease probability','Disease probability']
   df_proba.rename(columns={0:'No Disease',
                           1:'Disease'})
   df_proba
