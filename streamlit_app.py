@@ -6,6 +6,11 @@ import shap
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler,MinMaxScaler
 # Main title for the app
+col1, col2 = st.columns([7, 3])
+with col1:
+    st.subheader("左侧70%宽度")
+with col2:
+    st.subheader("右侧30%宽度")
 st.title('Prediction of Cardiovascular Disease in Middle-Aged and Elderly Patients with Diabetes Mellitus')
 
 # introduce the app and the method to use it
