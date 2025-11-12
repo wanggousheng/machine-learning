@@ -112,7 +112,6 @@ original_values = input_values.copy()
 input_values['Age'] = stand_scaler.transform(input_values['Age'].to_frame())
 input_values[columns_to_normalize] = max_scaler.transform(input_values[columns_to_normalize])
 feature_names = input_values.columns.tolist()
-original_values
 # input_values = input_values[columns]
 
 # set button for predict
@@ -141,15 +140,14 @@ if st.button("Predict",width="stretch"):
   # give some advice for user
   if predicted_class == 1:
     st.write(f'''Based on the model assessment, you have a high risk of developing cardiovascular disease, 
-    with a predicted probability of {100 * predicted_proba[1]:.1f}%.To better protect your health,
-    it is recommended that you consult a doctor in the cardiology or endocrinology department 
-    as soon as possible for further professional examinations and interventions.''' )
+    with a predicted probability of {100 * predicted_proba[1]:.1f}%.''' )
   if predicted_class == 0:
     st.write(f'''Based on the model assessment, you have a low risk of developing cardiovascular disease, 
     with a predicted probability of {100* predicted_proba[1]:.1f}.%''' )
 
 
   # SHAP explain
+  plt.figure(figsize=(12, 8))
   st.subheader("SHAP Force Plot Explanation")
   # shap.initjs()
   explainer_shap = shap.TreeExplainer(model)
