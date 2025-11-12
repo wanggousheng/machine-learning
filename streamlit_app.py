@@ -108,7 +108,7 @@ columns = ['Age','Self Reported Health Status','ADL Score','Hypertension','Dysli
 input_values_raw = np.array([values])
 
 input_values = pd.DataFrame(input_values_raw,columns = feature_names)
-original_values = input_values
+original_values = input_values.copy()
 input_values['Age'] = stand_scaler.transform(input_values['Age'].to_frame())
 input_values[columns_to_normalize] = max_scaler.transform(input_values[columns_to_normalize])
 feature_names = input_values.columns.tolist()
