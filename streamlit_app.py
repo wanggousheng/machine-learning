@@ -9,10 +9,10 @@ from sklearn.preprocessing import StandardScaler,MinMaxScaler
 st.title('Prediction of Cardiovascular Disease in Middle-Aged and Elderly Patients with Diabetes Mellitus')
 
 # introduce the app and the method to use it
-st.info('''This app, built on CHARLS data with an integrated XGBoost prediction model, assesses the 
-cardiovascular disease risk probability of middle-aged and elderly diabetic patients.
-To use it, users enter relevant clinical/health info via the left input panel; 
-clicking "Predict" provides personalized results, including disease risk probability and related visualizations.''')
+# st.info('''This app, built on CHARLS data with an integrated XGBoost prediction model, assesses the 
+# cardiovascular disease risk probability of middle-aged and elderly diabetic patients.
+# To use it, users enter relevant clinical/health info via the left input panel; 
+# clicking "Predict" provides personalized results, including disease risk probability and related visualizations.''')
 
 # get the column name for input data 
 X_train = pd.read_csv("X_train.csv")
