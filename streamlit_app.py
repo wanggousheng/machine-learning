@@ -112,7 +112,7 @@ original_values = input_values
 input_values['Age'] = stand_scaler.transform(input_values['Age'].to_frame())
 input_values[columns_to_normalize] = max_scaler.transform(input_values[columns_to_normalize])
 feature_names = input_values.columns.tolist()
-
+original_values
 # input_values = input_values[columns]
 
 # set button for predict
