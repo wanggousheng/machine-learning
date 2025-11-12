@@ -108,8 +108,10 @@ columns = ['Age','Self Reported Health Status','ADL Score','Hypertension','Dysli
 input_values_raw = np.array([values])
 
 input_values = pd.DataFrame(input_values_raw,columns = feature_names)
+original_values = input_values
 input_values['Age'] = stand_scaler.transform(input_values['Age'].to_frame())
 input_values[columns_to_normalize] = max_scaler.transform(input_values[columns_to_normalize])
+feature_names = input_values.feature_names
 
 # input_values = input_values[columns]
 
@@ -117,7 +119,6 @@ input_values[columns_to_normalize] = max_scaler.transform(input_values[columns_t
 if st.button("Predict",width="stretch"):
   predicted_class = model.predict(input_values)[0]   #get class
   predicted_proba = model.predict_proba(input_values)[0] #get probability
-  predicted_class
   df_proba = pd.DataFrame(predicted_proba).T   #transpose
  
   # turn the ndarray to dataframe
@@ -155,7 +156,7 @@ if st.button("Predict",width="stretch"):
   shap_values =explainer_shap.shap_values(input_values)
   shap_values_class = shap_values[0,:,1]
   base_value = explainer_shap.expected_value[0] 
-  shap.force_plot(base_value,shap_values_class,features=input_values, matplotlib=True)
+  shap.force_plot(base_value,shap_values_class,features=original_values, feature_names = feature_names,matplotlib=True)
 
   plt.savefig('shap_force_plot.png', bbox_inches='tight',dpi =1600)
   st.image('shap_force_plot.png',caption = 'SHAP Force Plot Explanation')
