@@ -106,7 +106,7 @@ with st.sidebar:
         "Self-Reported Health Status Score (1=Very Good, 5=Very Poor)",
         options=[1, 2, 3, 4, 5],
         index=2,
-        help="1 = Very Good, 2 = Good, 3 = Fair, 4 = Poor, 5 = Very Poor",
+        help="1 = Very Poor, 2 = Poor, 3 = Fair, 4 = Good, 5 = Very Good",
     )
     adlab_c = st.selectbox(
         "ADL Score: daily living activities with difficulty (0–6)",
