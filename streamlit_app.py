@@ -1,163 +1,307 @@
+import os
 import numpy as np
-import streamlit as st 
+import streamlit as st
 import pandas as pd
-import joblib 
-import shap 
+import joblib
+import shap
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import StandardScaler,MinMaxScaler
-# Main title for the app
 
-st.title('Prediction of Cardiovascular Disease in Middle-Aged and Elderly Patients with Diabetes Mellitus')
+# ---------------------------------------------------------------------------
+# Configuration
+# ---------------------------------------------------------------------------
+st.set_page_config(
+    page_title="CVD Risk Assessment in Diabetic Patients",
+    page_icon="🫀",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
-# introduce the app and the method to use it
-# st.info('''This app, built on CHARLS data with an integrated XGBoost prediction model, assesses the 
-# cardiovascular disease risk probability of middle-aged and elderly diabetic patients.
-# To use it, users enter relevant clinical/health info via the left input panel; 
-# clicking "Predict" provides personalized results, including disease risk probability and related visualizations.''')
+# The model and scaler files are expected to be in the same folder as this app.
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+RF_PATH = os.path.join(BASE_DIR, "rf.pkl")
+SCALER_PATH = os.path.join(BASE_DIR, "scaler.pkl")
 
-# get the column name for input data 
-X_train = pd.read_csv("X_train.csv")
-feature_names = X_train.columns.tolist()
-stand_scaler = StandardScaler()
-X_train['Age'] = stand_scaler.fit_transform(X_train['Age'].to_frame())
-max_scaler = MinMaxScaler()
-columns_to_normalize = ['Self Reported Health Status','ADL Score']
-X_train[columns_to_normalize] = max_scaler.fit_transform(X_train[columns_to_normalize])
+# ---------------------------------------------------------------------------
+# Load model and scaler (cached so they are only loaded once)
+# ---------------------------------------------------------------------------
+@st.cache_resource(show_spinner="Loading model and scaler...")
+def load_model_and_scaler():
+    if not os.path.exists(RF_PATH):
+        raise FileNotFoundError(
+            f"Could not find model file: {RF_PATH}. "
+            "Please make sure rf.pkl is placed in the same directory as this app."
+        )
+    if not os.path.exists(SCALER_PATH):
+        raise FileNotFoundError(
+            f"Could not find scaler file: {SCALER_PATH}. "
+            "Please make sure scaler.pkl is placed in the same directory as this app."
+        )
+    model = joblib.load(RF_PATH)
+    scaler = joblib.load(SCALER_PATH)
+    return model, scaler
 
-# Age 	Self Reported Health Status 	ADL Score 	Hypertension 	Dyslipidemia 	Kidney disease 	Hospital 	Chest pain
 
+model, scaler = load_model_and_scaler()
 
-#load trained model
-model = joblib.load('rf.pkl')
+# ---------------------------------------------------------------------------
+# Feature definitions
+# ---------------------------------------------------------------------------
+# The original CSV uses readable display names; the saved model/scaler use
+# lower-case / abbreviated names. Keep the display names for the UI and map
+# them to the model names internally.
+FEATURE_MAP = {
+    "Age": "age",
+    "Retire": "retire",
+    "Self Reported Health Status": "srh",
+    "ADL Score": "adlab_c",
+    "High Intensity Exercise": "vgact_c",
+    "Moderate Intensity Exercise": "mdact_c",
+    "Drinking": "drinkl",
+    "Hypertension": "hibpe",
+    "Dyslipidemia": "dyslipe",
+    "Lung disease": "lunge",
+    "Liver diseases": "livere",
+    "Kidney disease": "kidneye",
+    "Gastric disease": "digeste",
+    "Memory disorders": "memrye",
+    "Hospitalization within one year": "hospital",
+    "Chest pain": "da042s6",
+}
 
-# Age 	Self Reported Health Status 	ADL Score 	Hypertension 	Dyslipidemia 	Kidney disease 	Hospital 	Chest pain
+DISPLAY_FEATURES = list(FEATURE_MAP.keys())
+MODEL_FEATURES = list(FEATURE_MAP.values())
 
-# set siderbar and select box
+# ---------------------------------------------------------------------------
+# Header
+# ---------------------------------------------------------------------------
+st.title("Prediction of Cardiovascular Disease in Middle-Aged and Elderly Patients with Diabetes Mellitus")
+st.markdown(
+    """
+    This app, built on CHARLS 2020 data with a Random Forest model, assesses the
+    cardiovascular disease risk probability of middle-aged and elderly diabetic patients.
+
+    Enter the relevant clinical and health information in the left panel, then click **Predict**.
+    """
+)
+
+# ---------------------------------------------------------------------------
+# Sidebar inputs
+# ---------------------------------------------------------------------------
 with st.sidebar:
-  st.header("patient-related information")
+    st.header("Patient Information")
 
-  
-  #select box
-  age = st.slider("How old are you?", max_value = 85 ,min_value = 45,value=60)
+    # --- Demographics ---
+    st.subheader("Demographics")
+    age = st.slider("How old are you?", min_value=45, max_value=85, value=60)
+    retire = st.selectbox(
+        "Have you retired?",
+        options=[0, 1],
+        format_func=lambda x: "No" if x == 0 else "Yes",
+        index=0,
+    )
 
-  ##Self-Reported Health Status Score
-  srh = st.selectbox(
-    "Your Self-Reported Health Status Score(1–5 correspond to Very Good, Good, Fair, Poor, and Very Poor (in order).)",
-    (1, 2, 3, 4 ,5),
-    index=0,
-    placeholder="Select you score.",
-  )
+    # --- Health status ---
+    st.subheader("Health Status")
+    srh = st.selectbox(
+        "Self-Reported Health Status Score (1=Very Good, 5=Very Poor)",
+        options=[1, 2, 3, 4, 5],
+        index=2,
+        help="1 = Very Good, 2 = Good, 3 = Fair, 4 = Poor, 5 = Very Poor",
+    )
+    adlab_c = st.selectbox(
+        "ADL Score: daily living activities with difficulty (0–6)",
+        options=list(range(7)),
+        index=0,
+        help=(
+            "Daily living activities include: using the toilet, feeding yourself, "
+            "dressing yourself, controlling bowel and bladder movements, getting in and out of bed, "
+            "bathing yourself."
+        ),
+    )
 
-  ## daily living activities
-  adlab_c = st.selectbox(
-    '''How many of the following daily living activities do you have difficulty with?
-  (Note: Daily living activities include: using the toilet, feeding yourself,
-   dressing yourself, controlling bowel and bladder movements, getting in and out of bed, bathing yourself)''',
-    (0, 1, 2 , 3 , 4 , 5 ,6),
-    index=0,
-    placeholder='''Options: 0 item (no difficulty) / 1 item 
-    / 2 items / 3 items / 4 items / 5 items / 6 items.''',
-  )
-  
-  # hypertension
-  hibpe = st.selectbox(
-    "Has any doctor ever told you that you have hypertension?",
-    (0, 1),
-    index=0,
-    placeholder='No = 0,Yes = 1',
-  )
-  
-  ##  Dyslipidemia
-  dyslipe = st.selectbox(
-  '''Have you been diagnosed with Dyslipidemia (elevation of low density lipoprotein,
-  triglycerides (TGs),and total cholesterol, or a low high density lipoprotein level) by
-  a doctor?''',
-    (0, 1),
-    index=0,
-    placeholder='No = 0,Yes = 1',
-  )
-  
-  # Kidney disease
-  kidneye = st.selectbox(
-  '''Have you been diagnosed with Kidney disease (except for tumor or cancer) by a
-  doctor?''',
-  (0, 1),
-  index=0,
-  placeholder='No = 0,Yes = 1',
-  )
-  
-  ##inpatient care in the past year
-  hospital =st.selectbox(
-  '''Have you received inpatient care in the past year''',
-  (0, 1),
-  index=0,
-  placeholder='No = 0,Yes = 1',
-  )
+    # --- Lifestyle ---
+    st.subheader("Lifestyle")
+    vgact_c = st.selectbox(
+        "High Intensity Exercise",
+        options=[0, 1],
+        format_func=lambda x: "No" if x == 0 else "Yes",
+        index=0,
+    )
+    mdact_c = st.selectbox(
+        "Moderate Intensity Exercise",
+        options=[0, 1],
+        format_func=lambda x: "No" if x == 0 else "Yes",
+        index=0,
+    )
+    drinkl = st.selectbox(
+        "Drinking",
+        options=[0, 1],
+        format_func=lambda x: "No" if x == 0 else "Yes",
+        index=0,
+    )
 
-  ##chest_pain
-  chest_pain = st.selectbox(
-  '''Do you often have chest pain?''',
-  (0, 1),
-  index=0,
-  placeholder='No = 0,Yes = 1',
-  )
+    # --- Medical conditions ---
+    st.subheader("Medical Conditions")
+    hibpe = st.selectbox(
+        "Has any doctor ever told you that you have hypertension?",
+        options=[0, 1],
+        format_func=lambda x: "No" if x == 0 else "Yes",
+        index=0,
+    )
+    dyslipe = st.selectbox(
+        (
+            "Have you been diagnosed with Dyslipidemia (elevation of low-density lipoprotein, "
+            "triglycerides, and total cholesterol, or a low high-density lipoprotein level) by a doctor?"
+        ),
+        options=[0, 1],
+        format_func=lambda x: "No" if x == 0 else "Yes",
+        index=0,
+    )
+    lunge = st.selectbox(
+        "Have you been diagnosed with Lung disease by a doctor?",
+        options=[0, 1],
+        format_func=lambda x: "No" if x == 0 else "Yes",
+        index=0,
+    )
+    livere = st.selectbox(
+        "Have you been diagnosed with Liver disease by a doctor?",
+        options=[0, 1],
+        format_func=lambda x: "No" if x == 0 else "Yes",
+        index=0,
+    )
+    kidneye = st.selectbox(
+        "Have you been diagnosed with Kidney disease (except for tumor or cancer) by a doctor?",
+        options=[0, 1],
+        format_func=lambda x: "No" if x == 0 else "Yes",
+        index=0,
+    )
+    digeste = st.selectbox(
+        "Have you been diagnosed with Gastric disease by a doctor?",
+        options=[0, 1],
+        format_func=lambda x: "No" if x == 0 else "Yes",
+        index=0,
+    )
+    memrye = st.selectbox(
+        "Have you been diagnosed with Memory disorders by a doctor?",
+        options=[0, 1],
+        format_func=lambda x: "No" if x == 0 else "Yes",
+        index=0,
+    )
 
-# merge all the input data
-# Age 	Self Reported Health Status 	ADL Score 	Hypertension 	Dyslipidemia 	Kidney disease 	Hospital 	Chest pain
-values = [age,srh,adlab_c,hibpe,dyslipe, kidneye, hospital,chest_pain ]
-columns = ['Age','Self Reported Health Status','ADL Score','Hypertension','Dyslipidemia','Kidney disease','Hospital','Chest pain']
-input_values_raw = np.array([values])
+    # --- Healthcare utilization ---
+    st.subheader("Healthcare Utilization")
+    hospital = st.selectbox(
+        "Have you received inpatient care in the past year?",
+        options=[0, 1],
+        format_func=lambda x: "No" if x == 0 else "Yes",
+        index=0,
+    )
+    da042s6 = st.selectbox(
+        "Do you often have chest pain?",
+        options=[0, 1],
+        format_func=lambda x: "No" if x == 0 else "Yes",
+        index=0,
+    )
 
-input_values = pd.DataFrame(input_values_raw,columns = feature_names)
-original_values = input_values.copy()
-input_values['Age'] = stand_scaler.transform(input_values['Age'].to_frame())
-input_values[columns_to_normalize] = max_scaler.transform(input_values[columns_to_normalize])
-feature_names = input_values.columns.tolist()
-# input_values = input_values[columns]
+# ---------------------------------------------------------------------------
+# Assemble inputs
+# ---------------------------------------------------------------------------
+values = [
+    age, retire, srh, adlab_c, vgact_c, mdact_c, drinkl,
+    hibpe, dyslipe, lunge, livere, kidneye, digeste, memrye,
+    hospital, da042s6,
+]
 
-# set button for predict
-if st.button("Predict",width="stretch"):
-  predicted_class = model.predict(input_values)[0]   #get class
-  predicted_proba = model.predict_proba(input_values)[0] #get probability
-  df_proba = pd.DataFrame(predicted_proba).T   #transpose
- 
-  # turn the ndarray to dataframe
-  df_proba.columns =['No Disease probability','Disease probability']
-  df_proba.rename(columns={0:'No Disease',
-                          1:'Disease'})
-  
-  # visualize the probability
-  st.subheader('Predicted Result')
-  st.dataframe(df_proba['Disease probability'],
-            column_config={
-            'Disease probability':st.column_config.ProgressColumn(
-              'Disease probability',
-              format='%f',
-              width = 'medium',
-              min_value =0,
-              max_value =1),
-            })
+input_df = pd.DataFrame([values], columns=DISPLAY_FEATURES)
+input_model = input_df.rename(columns=FEATURE_MAP)
+original_values = input_df.copy()
 
-  # give some advice for user
-  if predicted_class == 1:
-    st.write(f'''Based on the model assessment, you have a high risk of developing cardiovascular disease, 
-    with a predicted probability of {100 * predicted_proba[1]:.1f}%.''' )
-  if predicted_class == 0:
-    st.write(f'''Based on the model assessment, you have a low risk of developing cardiovascular disease, 
-    with a predicted probability of {100* predicted_proba[1]:.1f}.%''' )
+# Apply the same scaler used during model training
+input_scaled = scaler.transform(input_model)
+input_scaled_df = pd.DataFrame(input_scaled, columns=MODEL_FEATURES)
 
+# ---------------------------------------------------------------------------
+# Prediction
+# ---------------------------------------------------------------------------
+if st.button("Predict", use_container_width=True):
+    predicted_class = model.predict(input_scaled_df)[0]
+    predicted_proba = model.predict_proba(input_scaled_df)[0]
+    disease_proba = float(predicted_proba[1])
 
-  # SHAP explain
-  plt.figure(figsize=(12, 8))
-  st.subheader("SHAP Force Plot Explanation")
-  # shap.initjs()
-  explainer_shap = shap.TreeExplainer(model)
-  shap_values =explainer_shap.shap_values(input_values)
-  shap_values_class = shap_values[0,:,1]
-  base_value = explainer_shap.expected_value[0] 
-  shap.force_plot(base_value,shap_values_class,features=original_values, feature_names = feature_names,matplotlib=True)
+    # ---- Result cards ----
+    st.subheader("Predicted Result")
+    c1, c2, c3 = st.columns(3)
+    c1.metric("CVD Probability", f"{disease_proba * 100:.1f}%")
+    c2.metric(
+        "Risk Level",
+        "High" if disease_proba >= 0.5 else "Low",
+    )
+    c3.metric("Predicted Class", "CVD" if predicted_class == 1 else "No CVD")
 
-  plt.savefig('shap_force_plot.png', bbox_inches='tight',dpi =800)
-  st.image('shap_force_plot.png',caption = 'SHAP Force Plot Explanation')
-    
+    # ---- Progress bar ----
+    st.progress(disease_proba, text=f"CVD Probability: {disease_proba * 100:.1f}%")
 
+    # ---- Interpretation ----
+    if predicted_class == 1:
+        st.error(
+            f"Based on the model assessment, you have a **high risk** of cardiovascular disease, "
+            f"with a predicted probability of **{disease_proba * 100:.1f}%**.",
+        )
+    else:
+        st.success(
+            f"Based on the model assessment, you have a **low risk** of cardiovascular disease, "
+            f"with a predicted probability of **{disease_proba * 100:.1f}%**.",
+        )
+
+    # ---- Probability table ----
+    proba_df = pd.DataFrame(
+        {
+            "Outcome": ["No CVD", "CVD"],
+            "Probability": [predicted_proba[0], predicted_proba[1]],
+        }
+    )
+    st.dataframe(
+        proba_df,
+        column_config={
+            "Probability": st.column_config.ProgressColumn(
+                "Probability",
+                format="%.3f",
+                min_value=0.0,
+                max_value=1.0,
+            )
+        },
+        hide_index=True,
+        use_container_width=True,
+    )
+
+    # ---- SHAP force plot explanation ----
+    st.subheader("SHAP Force Plot Explanation")
+    try:
+        explainer = shap.TreeExplainer(model)
+        shap_values = explainer.shap_values(input_scaled_df)
+
+        # SHAP versions differ in output shape: list of two arrays vs. 3D array.
+        if isinstance(shap_values, list):
+            shap_values_class = shap_values[1][0]
+        else:
+            shap_values_class = shap_values[0, :, 1]
+
+        # Base value for the positive class
+        if isinstance(explainer.expected_value, (list, tuple, np.ndarray)):
+            base_value = explainer.expected_value[1]
+        else:
+            base_value = explainer.expected_value
+
+        plt.figure(figsize=(14, 5))
+        shap.force_plot(
+            base_value,
+            shap_values_class,
+            features=original_values.values[0],
+            feature_names=DISPLAY_FEATURES,
+            matplotlib=True,
+            show=False,
+        )
+        plt.tight_layout()
+        st.pyplot(plt.gcf())
+    except Exception as e:
+        st.warning(f"SHAP explanation could not be generated: {e}")
