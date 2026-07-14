@@ -274,11 +274,10 @@ if st.button("Screen", use_container_width=True):
         use_container_width=True,
     )
 
-    # ---- SHAP decision plot explanation ----
-    st.subheader("SHAP Decision Plot Explanation")
+    # ---- SHAP force plot explanation ----
+    st.subheader("SHAP Force Plot Explanation")
     st.caption(
-        "The plot below shows how each feature pushes the model output from the base value "
-        "toward the final CVD likelihood. Features are ordered by their contribution."
+        "The plot below shows how each feature pushes the assessment toward or away from a CVD classification."
     )
     try:
         explainer = shap.TreeExplainer(model)
@@ -296,19 +295,20 @@ if st.button("Screen", use_container_width=True):
         else:
             base_value = explainer.expected_value
 
-        # Display f(x) value separately so it is not hidden by plot annotations
+        # Display f(x) value separately so it is not hidden by the plot layout
         st.info(f"Model output for this patient: **f(x) = {disease_proba:.3f}**")
 
-        plt.figure(figsize=(10, 9))
-        shap.decision_plot(
+        shap.force_plot(
             base_value,
             shap_values_class,
             features=original_values.values[0],
             feature_names=DISPLAY_FEATURES,
+            matplotlib=True,
             show=False,
+            figsize=(28, 10),
         )
         plt.tight_layout()
-        plot_path = os.path.join(BASE_DIR, "shap_decision_plot.png")
+        plot_path = os.path.join(BASE_DIR, "shap_force_plot.png")
         plt.savefig(plot_path, bbox_inches="tight", dpi=300, pad_inches=0.3)
         plt.close()
         st.image(plot_path, use_container_width=True)
