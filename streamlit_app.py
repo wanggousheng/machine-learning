@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 # Configuration
 # ---------------------------------------------------------------------------
 st.set_page_config(
-    page_title="CVD Risk Assessment in Diabetic Patients",
+    page_title="CVD Screening and Diagnosis in Diabetic Patients",
     page_icon="🫀",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -74,13 +74,13 @@ MODEL_FEATURES = list(FEATURE_MAP.values())
 # ---------------------------------------------------------------------------
 # Header
 # ---------------------------------------------------------------------------
-st.title("Prediction of Cardiovascular Disease in Middle-Aged and Elderly Patients with Diabetes Mellitus")
+st.title("Screening and Diagnosis of Cardiovascular Disease in Middle-Aged and Elderly Patients with Diabetes Mellitus")
 st.markdown(
     """
     This app, built on CHARLS 2020 data with a Random Forest model, assesses the
-    cardiovascular disease risk probability of middle-aged and elderly diabetic patients.
+    likelihood of current cardiovascular disease in middle-aged and elderly diabetic patients.
 
-    Enter the relevant clinical and health information in the left panel, then click **Predict**.
+    Enter the relevant clinical and health information in the left panel, then click **Screen**.
     """
 )
 
@@ -106,7 +106,7 @@ with st.sidebar:
         "Self-Reported Health Status Score (1=Very Good, 5=Very Poor)",
         options=[1, 2, 3, 4, 5],
         index=2,
-        help="1 = Very Poor, 2 = Poor, 3 = Fair, 4 = Good, 5 = Very Good",
+        help="1 = Very Good, 2 = Good, 3 = Fair, 4 = Poor, 5 = Very Poor",
     )
     adlab_c = st.selectbox(
         "ADL Score: daily living activities with difficulty (0–6)",
@@ -221,50 +221,50 @@ input_scaled = scaler.transform(input_model)
 input_scaled_df = pd.DataFrame(input_scaled, columns=MODEL_FEATURES)
 
 # ---------------------------------------------------------------------------
-# Prediction
+# Screening and Diagnosis
 # ---------------------------------------------------------------------------
-if st.button("Predict", use_container_width=True):
+if st.button("Screen", use_container_width=True):
     predicted_class = model.predict(input_scaled_df)[0]
     predicted_proba = model.predict_proba(input_scaled_df)[0]
     disease_proba = float(predicted_proba[1])
 
     # ---- Result cards ----
-    st.subheader("Predicted Result")
+    st.subheader("Screening Result")
     c1, c2, c3 = st.columns(3)
-    c1.metric("CVD Probability", f"{disease_proba * 100:.1f}%")
+    c1.metric("Likelihood of Current CVD", f"{disease_proba * 100:.1f}%")
     c2.metric(
-        "Risk Level",
+        "Likelihood Level",
         "High" if disease_proba >= 0.5 else "Low",
     )
-    c3.metric("Predicted Class", "CVD" if predicted_class == 1 else "No CVD")
+    c3.metric("Screening Result", "CVD" if predicted_class == 1 else "No CVD")
 
     # ---- Progress bar ----
-    st.progress(disease_proba, text=f"CVD Probability: {disease_proba * 100:.1f}%")
+    st.progress(disease_proba, text=f"Likelihood of Current CVD: {disease_proba * 100:.1f}%")
 
     # ---- Interpretation ----
     if predicted_class == 1:
         st.error(
-            f"Based on the model assessment, you have a **high risk** of cardiovascular disease, "
-            f"with a predicted probability of **{disease_proba * 100:.1f}%**.",
+            f"Based on the model assessment, you have a **high likelihood** of current cardiovascular disease, "
+            f"with a likelihood of **{disease_proba * 100:.1f}%**.",
         )
     else:
         st.success(
-            f"Based on the model assessment, you have a **low risk** of cardiovascular disease, "
-            f"with a predicted probability of **{disease_proba * 100:.1f}%**.",
+            f"Based on the model assessment, you have a **low likelihood** of current cardiovascular disease, "
+            f"with a likelihood of **{disease_proba * 100:.1f}%**.",
         )
 
-    # ---- Probability table ----
+    # ---- Likelihood table ----
     proba_df = pd.DataFrame(
         {
             "Outcome": ["No CVD", "CVD"],
-            "Probability": [predicted_proba[0], predicted_proba[1]],
+            "Likelihood": [predicted_proba[0], predicted_proba[1]],
         }
     )
     st.dataframe(
         proba_df,
         column_config={
-            "Probability": st.column_config.ProgressColumn(
-                "Probability",
+            "Likelihood": st.column_config.ProgressColumn(
+                "Likelihood",
                 format="%.3f",
                 min_value=0.0,
                 max_value=1.0,
@@ -276,6 +276,9 @@ if st.button("Predict", use_container_width=True):
 
     # ---- SHAP force plot explanation ----
     st.subheader("SHAP Force Plot Explanation")
+    st.caption(
+        "The plot below shows how each feature pushes the assessment toward or away from a CVD classification."
+    )
     try:
         explainer = shap.TreeExplainer(model)
         shap_values = explainer.shap_values(input_scaled_df)
@@ -292,7 +295,10 @@ if st.button("Predict", use_container_width=True):
         else:
             base_value = explainer.expected_value
 
-        plt.figure(figsize=(14, 5))
+        # Display f(x) value separately so it is not hidden by the plot layout
+        st.info(f"Model output for this patient: **f(x) = {disease_proba:.3f}**")
+
+        plt.figure(figsize=(18, 7))
         shap.force_plot(
             base_value,
             shap_values_class,
@@ -302,6 +308,9 @@ if st.button("Predict", use_container_width=True):
             show=False,
         )
         plt.tight_layout()
-        st.pyplot(plt.gcf())
+        plot_path = os.path.join(BASE_DIR, "shap_force_plot.png")
+        plt.savefig(plot_path, bbox_inches="tight", dpi=300, pad_inches=0.3)
+        plt.close()
+        st.image(plot_path, use_container_width=True)
     except Exception as e:
         st.warning(f"SHAP explanation could not be generated: {e}")
